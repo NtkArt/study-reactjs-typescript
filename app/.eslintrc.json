@@ -30,7 +30,11 @@
         "tsx": "never"
       }
     ],
-    "no-use-before-define": "off"
+    "no-use-before-define": "off",
+    "object-curly-newline": "off",
+    "arrow-parens": "warn",
+    "no-await-in-loop": "off",
+    "implicit-arrow-linebreak": "off"
   },
   "settings": {
     "import/resolver": {

@@ -3,7 +3,7 @@ import { shade } from 'polished';
 
 export const Title = styled.h1`
   font-size: 48px;
-  color: #3a3a3a;
+  color: #000;
   max-width: 460px;
 `;
 
@@ -51,25 +51,26 @@ export const Form = styled.form`
   }
 `;
 
-export const Repositories = styled.div`
+export const Comics = styled.div`
   margin-top: 80px;
   max-width: 900px;
 
   a {
-    background: #fff;
+    background: #d16666;
     border-radius: 5px;
-    width: 100%;
+    width: 30%;
     padding: 24px;
     display: block;
+    float: left;
     text-decoration: none;
-
+    box-shadow: 5px 10px 5px 1px #333232;
     display: flex;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
     transition: transform 0.4s;
 
-    & + a {
-      margin-top: 20px;
-    }
+    margin: 0 10px 15px 20px;
 
     &:hover {
       cursor: pointer;
@@ -77,16 +78,22 @@ export const Repositories = styled.div`
     }
 
     img {
-      width: 200px;
+      max-width: 200px;
       height: 250px;
     }
 
-    div {
-      margin-left: 16px;
+    @media only screen and (max-width: 600px) {
+      img {
+        max-width: 100px;
+        height: 150px;
+      }
+    }
 
+    div {
+      margin-bottom: 10px;
       strong {
         font-size: 20px;
-        color: #504a4a;
+        color: #000;
       }
 
       p {
