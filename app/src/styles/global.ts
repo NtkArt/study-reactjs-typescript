@@ -18,7 +18,7 @@ export default createGlobalStyle`
   body::after{
     content: "";
     background: url(${marvelLogo}) no-repeat 60% top;
-    opacity: 0.5;
+    opacity: 0.2;
     top: 0;
     left: 0;
     bottom: 0;

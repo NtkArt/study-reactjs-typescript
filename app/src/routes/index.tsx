@@ -6,7 +6,7 @@ import Character from '../pages/Character';
 const Routes: React.FC = () => (
   <Switch>
     <Route path="/" exact component={Dashboard} />
-    <Route path="/character/:id+" component={Character} />
+    <Route path="/character/:id" component={Character} />
   </Switch>
 );
 
