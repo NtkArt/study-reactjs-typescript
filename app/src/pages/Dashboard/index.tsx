@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from 'react';
+import React, { FormEvent, useState, useEffect } from 'react';
 import { CircularProgress } from '@material-ui/core';
 import { Title, Form, Comics, Error } from './styles';
 import api from '../../services/api';
@@ -18,10 +18,15 @@ interface Character {
 
 const Dashboard: React.FC = () => {
   const [newCharacter, setNewCharacter] = useState('');
-  const [characters, setCharacters] = useState<Character[]>([]);
   const [isRequested, setIsRequested] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [inputError, setInputError] = useState('');
+  const [characters, setCharacters] = useState<Character[]>(() => {
+    const storage = localStorage.getItem('@MarvelComics:characters');
+
+    if (storage) return JSON.parse(storage);
+    return [];
+  });
 
   function handleCheckLoading() {
     if (isLoading === false) {
@@ -29,6 +34,13 @@ const Dashboard: React.FC = () => {
     }
     return true;
   }
+
+  useEffect(() => {
+    localStorage.setItem(
+      '@MarvelComics:characters',
+      JSON.stringify(characters),
+    );
+  }, [characters]);
 
   async function handleAddCharacter(
     event: FormEvent<HTMLFormElement>,
