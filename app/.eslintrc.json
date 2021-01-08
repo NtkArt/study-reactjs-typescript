@@ -32,9 +32,12 @@
     ],
     "no-use-before-define": "off",
     "object-curly-newline": "off",
-    "arrow-parens": "warn",
+    "arrow-parens": "off",
+    "max-len": "off",
     "no-await-in-loop": "off",
-    "implicit-arrow-linebreak": "off"
+    "implicit-arrow-linebreak": "off",
+    "function-paren-newline": "off",
+    "prefer-spread": "warn"
   },
   "settings": {
     "import/resolver": {
