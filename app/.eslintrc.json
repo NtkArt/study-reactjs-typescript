@@ -37,7 +37,9 @@
     "no-await-in-loop": "off",
     "implicit-arrow-linebreak": "off",
     "function-paren-newline": "off",
-    "prefer-spread": "warn"
+    "prefer-spread": "warn",
+    "operator-linebreak": "off",
+    "indent": "off"
   },
   "settings": {
     "import/resolver": {

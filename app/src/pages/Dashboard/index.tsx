@@ -1,6 +1,6 @@
 import React, { FormEvent, useState } from 'react';
 import { CircularProgress } from '@material-ui/core';
-import { Title, Form, Comics } from './styles';
+import { Title, Form, Comics, Error } from './styles';
 import api from '../../services/api';
 import keys from '../../config/keys';
 
@@ -21,10 +21,7 @@ const Dashboard: React.FC = () => {
   const [characters, setCharacters] = useState<Character[]>([]);
   const [isRequested, setIsRequested] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
-  function handleCharacterInputEmpty() {
-    alert('O campo de busca nao pode ser vazio');
-  }
+  const [inputError, setInputError] = useState('');
 
   function handleCheckLoading() {
     if (isLoading === false) {
@@ -40,58 +37,64 @@ const Dashboard: React.FC = () => {
       fazendo o uso da API da Marvel Developers.
       Salvando a nova comic no state de comics.
     */
-
     event.preventDefault();
 
-    if (isRequested === false) {
-      let response = await api.get(
-        `v1/public/characters?ts=1&apikey=${keys.api_key}&hash=${keys.hash}&limit=100`,
-      );
+    try {
+      if (isRequested === false) {
+        let response = await api.get(
+          `v1/public/characters?ts=1&apikey=${keys.api_key}&hash=${keys.hash}&limit=100`,
+        );
 
-      const results = response.data;
-      const { data } = results;
-      let { offset } = data;
-      const { total } = data;
-      const allCharacters: ConcatArray<never>[] = [];
-      if (newCharacter.length > 0) {
-        do {
-          setIsLoading(true);
+        const results = response.data;
+        const { data } = results;
+        let { offset } = data;
+        const { total } = data;
+        const allCharacters: ConcatArray<never>[] = [];
+        if (newCharacter.length > 0) {
+          do {
+            setIsLoading(true);
 
-          response = await api.get(
-            `v1/public/characters?ts=1&apikey=${keys.api_key}&hash=${keys.hash}&limit=100&offset=${offset}`,
+            response = await api.get(
+              `v1/public/characters?ts=1&apikey=${keys.api_key}&hash=${keys.hash}&limit=100&offset=${offset}`,
+            );
+            offset += 100;
+
+            allCharacters.push(response.data.data.results);
+          } while (offset < total);
+
+          const flated = [].concat(...allCharacters);
+
+          const foundChar = flated.filter((char: Character) =>
+            char.name.includes(newCharacter),
           );
-          offset += 100;
 
-          allCharacters.push(response.data.data.results);
-        } while (offset < total);
+          foundChar.map((char: Character) =>
+            setCharacters([...characters, char]),
+          );
 
-        const flated = [].concat(...allCharacters);
-
-        const foundChar = flated.filter((char: Character) =>
-          char.name.includes(newCharacter),
-        );
-
-        foundChar.map((char: Character) =>
-          setCharacters([...characters, char]),
-        );
-
-        console.log(foundChar);
-
-        setIsLoading(false);
-        setNewCharacter('');
-        setIsRequested(false);
+          setIsLoading(false);
+          setNewCharacter('');
+          setIsRequested(false);
+          setInputError('');
+        } else {
+          setInputError('O campo de busca nao pode ser vazio');
+        }
       } else {
-        handleCharacterInputEmpty();
+        setIsRequested(true);
       }
-    } else {
-      setIsRequested(true);
+    } catch (err) {
+      setInputError('Error na busca de personagens');
     }
   }
 
   return (
     <>
       <Title>Marvel Characters</Title>
-      <Form onSubmit={e => handleAddCharacter(e)} action="">
+      <Form
+        hasError={!!inputError}
+        onSubmit={e => handleAddCharacter(e)}
+        action=""
+      >
         <input
           value={newCharacter}
           onChange={e => setNewCharacter(e.target.value)}
@@ -100,13 +103,14 @@ const Dashboard: React.FC = () => {
         />
         {handleCheckLoading() ? (
           <button type="button">
-            {' '}
             <CircularProgress color="primary" />
           </button>
         ) : (
           <button type="submit">Pesquisar HQ</button>
         )}
       </Form>
+
+      {inputError && <Error>{inputError}</Error>}
       <Comics>
         {characters.map(character => (
           <a key={character.id} href="teste">
