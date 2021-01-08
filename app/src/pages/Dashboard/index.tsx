@@ -1,4 +1,5 @@
 import React, { FormEvent, useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { CircularProgress } from '@material-ui/core';
 import { Title, Form, Comics, Error } from './styles';
 import api from '../../services/api';
@@ -125,13 +126,13 @@ const Dashboard: React.FC = () => {
       {inputError && <Error>{inputError}</Error>}
       <Comics>
         {characters.map(character => (
-          <a key={character.id} href="teste">
+          <Link key={character.id} to={`character/${character.id}`}>
             <div>
               <strong>{character.name}</strong>
             </div>
 
             <img src={character.thumbnail.path} alt={character.name} />
-          </a>
+          </Link>
         ))}
       </Comics>
     </>
